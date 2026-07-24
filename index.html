@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ECC Service Proposal</title>
+  <style>
+    :root {
+      --navy: #1b2a4a;
+      --blue: #2e4d8a;
+      --gold: #d6a84f;
+      --cream: #fff3cd;
+      --ink: #172033;
+      --muted: #64708a;
+      --line: #dce2ec;
+      --panel: #f5f7fb;
+      --white: #ffffff;
+      --danger: #a33333;
+      --shadow: 0 18px 50px rgba(20, 35, 70, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(46, 77, 138, .16), transparent 36rem),
+        #edf1f7;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 32px auto 56px;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 26px 30px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), #233e75);
+      border-radius: 22px 22px 0 0;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-mark {
+      width: 54px;
+      height: 54px;
+      flex: 0 0 auto;
+      object-fit: cover;
+      object-position: center;
+      background: var(--navy);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 5px 16px rgba(0, 0, 0, .22);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      letter-spacing: -.035em;
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      color: #d6def0;
+      font-size: .94rem;
+    }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .button {
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      border-radius: 11px;
+      color: var(--white);
+      background: rgba(255, 255, 255, .1);
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .button.primary {
+      color: var(--navy);
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      background: var(--white);
+      border-radius: 0 0 22px 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .controls {
+      padding: 26px;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+    }
+
+    .control-section + .control-section {
+      margin-top: 26px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--blue);
+      font-size: .75rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .field { display: grid; gap: 7px; margin-bottom: 14px; }
+
+    label {
+      color: #3b465c;
+      font-size: .82rem;
+      font-weight: 750;
+    }
+
+    input, select {
+      width: 100%;
+      min-height: 43px;
+      padding: 9px 11px;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid #cfd6e3;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(46, 77, 138, .12);
+    }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      margin-bottom: 16px;
+      background: #e8edf5;
+      border-radius: 12px;
+    }
+
+    .segment {
+      padding: 10px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .segment.active {
+      color: var(--white);
+      background: var(--blue);
+      box-shadow: 0 4px 12px rgba(46, 77, 138, .2);
+    }
+
+    .rate-card {
+      padding: 14px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 13px;
+    }
+
+    .rate-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .rate-value { font-size: 1.15rem; font-weight: 850; }
+    .rate-status { margin-top: 7px; color: #cbd5e8; font-size: .75rem; line-height: 1.4; }
+
+    .link-button {
+      padding: 0;
+      border: 0;
+      color: #f4cf7d;
+      background: transparent;
+      cursor: pointer;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .report { padding: 30px; min-width: 0; }
+
+    .report-title {
+      padding: 15px 18px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 12px 12px 0 0;
+      font-weight: 850;
+      text-align: center;
+      letter-spacing: .02em;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-bottom: 20px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-top: 0;
+    }
+
+    .meta div { padding: 12px 14px; background: var(--white); }
+    .meta span { display: block; color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }
+    .meta strong { display: block; margin-top: 4px; font-size: .9rem; }
+
+    .section-title {
+      padding: 10px 13px;
+      margin-top: 18px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 8px 8px 0 0;
+      font-size: .9rem;
+      font-weight: 850;
+    }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-top: 0; }
+
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: .84rem;
+    }
+
+    th {
+      color: var(--navy);
+      background: #e9edf5;
+      font-size: .75rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    td.number, th.number { text-align: right; font-variant-numeric: tabular-nums; }
+    tr:last-child td { border-bottom: 0; }
+    tr.total td { background: var(--cream); font-weight: 850; }
+
+    .service-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border: 1px solid var(--line);
+      border-top: 0;
+    }
+
+    .service-list li {
+      display: flex;
+      gap: 12px;
+      padding: 10px 13px;
+      border-bottom: 1px solid var(--line);
+      font-size: .83rem;
+    }
+
+    .service-list li:last-child { border-bottom: 0; }
+    .service-list b { color: var(--blue); }
+
+    .note {
+      margin: 15px 2px 0;
+      color: var(--muted);
+      font-size: .76rem;
+      line-height: 1.55;
+    }
+
+    .signatures {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      margin-top: 48px;
+    }
+
+    .signature {
+      padding-top: 9px;
+      border-top: 1px solid #7a8497;
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding-top: 14px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-size: .72rem;
+      text-align: center;
+    }
+
+    .print-letterhead,
+    .print-letterhead-footer { display: none; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 900px) {
+      .hero { align-items: flex-start; flex-direction: column; }
+      .workspace { grid-template-columns: 1fr; }
+      .controls { border-right: 0; border-bottom: 1px solid var(--line); }
+      .report { padding: 22px; }
+    }
+
+    @media (max-width: 600px) {
+      .page { width: 100%; margin: 0; }
+      .hero, .workspace { border-radius: 0; }
+      .hero, .controls, .report { padding: 20px; }
+      .meta { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .signatures { gap: 35px; }
+    }
+
+    @media print {
+      @page { margin: 0; size: A4; }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      html, body {
+        width: 210mm;
+        min-height: 297mm;
+        background: #fff;
+      }
+      body {
+        padding: 7mm 12mm 21mm;
+      }
+      .page { width: 100%; margin: 0; }
+      .hero, .controls { display: none; }
+      .workspace { display: block; box-shadow: none; border-radius: 0; }
+      .report { padding: 3mm 0 0; }
+      .print-letterhead {
+        display: grid;
+        grid-template-columns: 24mm 1fr;
+        align-items: center;
+        min-height: 25mm;
+        padding: 1.5mm 0 2mm;
+        border-top: 1.5mm solid #c9a227 !important;
+        border-bottom: .45mm solid #c9a227 !important;
+        background: #fff !important;
+      }
+      .print-letterhead img {
+        width: 18mm;
+        height: 18mm;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+      .letterhead-company {
+        color: #b8860b !important;
+        font: 700 16pt Georgia, "Times New Roman", serif;
+        letter-spacing: .01em;
+      }
+      .letterhead-address {
+        margin-top: 1.5mm;
+        color: #333;
+        font: 8.5pt Arial, sans-serif;
+      }
+      .letterhead-contact {
+        margin-top: 1.2mm;
+        color: #4a4a4a;
+        font: 7.5pt Arial, sans-serif;
+      }
+      .letterhead-contact b { color: #333; }
+      .letterhead-contact span { color: #b8860b !important; }
+      .print-letterhead-footer {
+        display: block;
+        position: fixed;
+        z-index: 20;
+        left: 12mm;
+        right: 12mm;
+        bottom: 7mm;
+        min-height: 13mm;
+        padding-top: 2.5mm;
+        color: #888 !important;
+        border-top: .35mm solid #c9a227 !important;
+        background: #fff !important;
+        font: 7.5pt Arial, sans-serif;
+        line-height: 1.5;
+        text-align: center;
+      }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; table-layout: fixed; }
+      .report-title {
+        position: relative;
+        overflow: hidden;
+        padding: 11px 14px;
+        color: #ffffff !important;
+        background: #1b2a4a !important;
+        border-top: 4px solid #1b2a4a !important;
+        border-bottom: 2px solid #c9a227 !important;
+        border-radius: 8px 8px 0 0;
+        font-size: 12px;
+        letter-spacing: .035em;
+      }
+      .report-title::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 8px 8px 0 0;
+        box-shadow: inset 0 0 0 9999px #1b2a4a;
+      }
+      .meta {
+        margin-bottom: 11px;
+        border-top: 0;
+        border-radius: 0 0 0 0;
+      }
+      .meta div { padding: 10px 12px; }
+      .meta span { font-size: 8px; letter-spacing: .12em; }
+      .meta strong { margin-top: 4px; font-size: 12px; }
+      .section-title {
+        position: relative;
+        overflow: hidden;
+        margin-top: 12px;
+        padding: 9px 12px;
+        color: #ffffff !important;
+        background: #1b2a4a !important;
+        border-top: 3px solid #1b2a4a !important;
+        border-bottom: 1.5px solid #c9a227 !important;
+        border-radius: 7px 7px 0 0;
+        font-size: 11px;
+      }
+      .section-title::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 7px 7px 0 0;
+        box-shadow: inset 0 0 0 9999px #1b2a4a;
+      }
+      th, td {
+        padding: 7px 9px;
+        font-size: 9.5px;
+        line-height: 1.25;
+      }
+      th {
+        color: #1b2a4a !important;
+        background: #e9edf5 !important;
+        font-size: 8.5px;
+        font-weight: 800;
+      }
+      td.number, th.number { padding-right: 10px; }
+      tr.total td {
+        background: #fff3cd !important;
+        border-top: 1.5px solid #c9a227 !important;
+        border-bottom: 1.5px solid #c9a227 !important;
+        font-weight: 850;
+      }
+      .service-list li {
+        padding: 8px 12px;
+        font-size: 10px;
+        line-height: 1.25;
+      }
+      .note { margin-top: 8px; font-size: 7.5px; }
+      .signatures { gap: 45px; margin-top: 16px; }
+      .signature { padding-top: 5px; font-size: 7.5px; }
+      .footer { display: none; }
+      .report-title,
+      .section-title,
+      table,
+      .service-list,
+      .meta,
+      .signatures,
+      .note { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-letterhead" aria-hidden="true">
+    <img src="assets/ecc-letterhead-logo.png" alt="">
+    <div>
+      <div class="letterhead-company">ECC CONSULTING GLOBAL F.Z.C.</div>
+      <div class="letterhead-address">Business District: Ajman Free Zone: Office - C1 - 1F - SF10019</div>
+      <div class="letterhead-contact">
+        <b>Tel:</b> +971541620177 &nbsp; | &nbsp;
+        <b>Email:</b> <span>inquiry@eccagency.com</span> &nbsp; | &nbsp;
+        <b>Web:</b> <span>www.eccagency.com</span>
+      </div>
+    </div>
+  </div>
+  <main class="page">
+    <header class="hero">
+      <div class="brand">
+        <img class="brand-mark" src="assets/ecc-logo.jpeg" alt="ECC Consulting Global logo">
+        <div>
+          <h1>Service Proposal</h1>
+          <p><span id="heroProgram">Career Development Program</span> &middot; applicant, family and currency summary</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="button" id="resetButton" type="button">Reset</button>
+        <button class="button primary" id="printButton" type="button">Print / Save PDF</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="controls">
+        <section class="control-section">
+          <p class="eyebrow">Applicant profile</p>
+          <div class="field">
+            <label for="clientName">Client name</label>
+            <input id="clientName" type="text" placeholder="Enter applicant name">
+          </div>
+          <div class="field">
+            <label for="programType">Application program</label>
+            <select id="programType">
+              <option value="career">Career Development Program</option>
+              <option value="student">International Student Program</option>
+              <option value="pr">Permanent Residency Program</option>
+              <option value="tourist">Tourist Program</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="destinationCountry">Destination / residence country</label>
+            <select id="destinationCountry"></select>
+          </div>
+          <div class="segmented" aria-label="Application type">
+            <button class="segment active" type="button" data-mode="single">Single</button>
+            <button class="segment" type="button" data-mode="family">Family</button>
+          </div>
+          <div id="familyOptions" class="hidden">
+            <div class="field">
+              <label for="spouseCount">Spouse / secondary adult</label>
+              <select id="spouseCount">
+                <option value="0">None</option>
+                <option value="1">1 adult</option>
+                <option value="2">2 adults</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="childCount">Dependent children</label>
+              <select id="childCount">
+                <option value="0">None</option>
+                <option value="1">1 child</option>
+                <option value="2">2 children</option>
+                <option value="3">3 children</option>
+                <option value="4">4 children</option>
+                <option value="5">5 children</option>
+                <option value="6">6 children</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <p class="eyebrow">Fees</p>
+          <div class="field">
+            <label for="principalFee">Principal applicant fee</label>
+            <input id="principalFee" type="number" min="0" step="50" value="9500">
+          </div>
+          <div class="two-col hidden" id="dependentFeeFields">
+            <div class="field">
+              <label for="spouseFee">Per adult</label>
+              <input id="spouseFee" type="number" min="0" step="50" value="4750">
+            </div>
+            <div class="field">
+              <label for="childFee">Per child</label>
+              <input id="childFee" type="number" min="0" step="50" value="1000">
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="field">
+              <label for="vatMode">VAT</label>
+              <select id="vatMode">
+                <option value="off">No VAT</option>
+                <option value="on">Add VAT</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="vatRate">VAT rate (%)</label>
+              <input id="vatRate" type="number" min="0" step="0.01" value="5">
+            </div>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <p class="eyebrow">Currency conversion</p>
+          <div class="two-col">
+            <div class="field">
+              <label for="baseCurrency">Fee currency</label>
+              <select id="baseCurrency"></select>
+            </div>
+            <div class="field">
+              <label for="targetCurrency">Display currency</label>
+              <select id="targetCurrency"></select>
+            </div>
+          </div>
+          <div class="rate-card">
+            <div class="rate-line">
+              <span id="rateValue" class="rate-value">Loading rate…</span>
+              <button class="link-button" id="refreshRate" type="button">Refresh</button>
+            </div>
+            <div id="rateStatus" class="rate-status">Connecting to the exchange-rate service.</div>
+          </div>
+          <div class="field" style="margin-top: 13px">
+            <label for="manualRate">Manual rate override (optional)</label>
+            <input id="manualRate" type="number" min="0" step="0.000001" placeholder="Use live rate">
+          </div>
+        </section>
+
+      </aside>
+
+      <section class="report" aria-live="polite">
+        <div class="report-title" id="reportTitle">ECC CAREER DEVELOPMENT PROGRAM &middot; PAYMENT BREAKDOWN</div>
+        <div class="meta">
+          <div><span>Prepared for</span><strong id="metaClient">Prospective Client</strong></div>
+          <div><span>Application</span><strong id="metaMode">Single applicant</strong></div>
+          <div><span>Country</span><strong id="metaCountry">Canada</strong></div>
+        </div>
+
+        <div class="section-title">Applicant Breakdown</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 52px">No.</th>
+                <th>Applicant</th>
+                <th class="number" id="baseApplicantHeader">Amount (CAD)</th>
+                <th class="number" id="targetApplicantHeader">Amount (PHP)</th>
+              </tr>
+            </thead>
+            <tbody id="applicantRows"></tbody>
+            <tfoot>
+              <tr id="applicantSubtotalRow" class="total">
+                <td colspan="2" id="applicantSubtotalLabel">TOTAL APPLICANTS</td>
+                <td class="number" id="applicantBaseTotal"></td>
+                <td class="number" id="applicantTargetTotal"></td>
+              </tr>
+              <tr id="applicantVatRow" class="hidden">
+                <td colspan="2" id="applicantVatLabel">VAT</td>
+                <td class="number" id="applicantBaseVat"></td>
+                <td class="number" id="applicantTargetVat"></td>
+              </tr>
+              <tr id="applicantGrandTotalRow" class="total hidden">
+                <td colspan="2">TOTAL INCLUDING VAT</td>
+                <td class="number" id="applicantBaseGrandTotal"></td>
+                <td class="number" id="applicantTargetGrandTotal"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="section-title">Fee / Service Description</div>
+        <ol class="service-list">
+          <li><b>1.</b> Initial Program Fee (Commitment Stage)</li>
+          <li><b>2.</b> Government &amp; Mandatory Fees (Paid During Processing · Per Applicant)</li>
+          <li><b>3.</b> Professional &amp; Service Fees</li>
+          <li><b>4.</b> Documentation Support Services</li>
+          <li><b>5.</b> Final Payment (Payable Upon Visa Approval)</li>
+        </ol>
+
+        <div class="section-title">Payment Structure</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Payment milestone</th>
+                <th>Coverage</th>
+                <th class="number" id="basePaymentHeader">Amount (CAD)</th>
+                <th class="number" id="targetPaymentHeader">Amount (PHP)</th>
+              </tr>
+            </thead>
+            <tbody id="paymentRows"></tbody>
+            <tfoot>
+              <tr class="total">
+                <td colspan="2" id="paymentTotalLabel">TOTAL</td>
+                <td class="number" id="paymentBaseTotal"></td>
+                <td class="number" id="paymentTargetTotal"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <p class="note" id="conversionNote"></p>
+
+        <div class="signatures">
+          <div class="signature">Prepared by: ECC Consulting</div>
+          <div class="signature">Approved by / Client</div>
+        </div>
+        <div class="footer" id="reportFooter">ECC Career Development Program &middot; Confidential &amp; Proprietary</div>
+      </section>
+    </div>
+  </main>
+  <div class="print-letterhead-footer" aria-hidden="true">
+    ECC Consulting Global F.Z.C. &nbsp; | &nbsp; Business District: Ajman Free Zone: Office - C1 - 1F - SF10019
+    &nbsp; | &nbsp; inquiry@eccagency.com &nbsp; | &nbsp; www.eccagency.com<br>
+    Tel: +971541620177
+  </div>
+
+  <script>
+    const fallbackCountries = [["Åland Islands","EUR"],["Afghanistan","AFN"],["Albania","ALL"],["Algeria","DZD"],["American Samoa","USD"],["Andorra","EUR"],["Angola","AOA"],["Anguilla","XCD"],["Antigua and Barbuda","XCD"],["Argentina","ARS"],["Armenia","AMD"],["Aruba","AWG"],["Australia","AUD"],["Austria","EUR"],["Azerbaijan","AZN"],["Bahamas","BSD"],["Bahrain","BHD"],["Bangladesh","BDT"],["Barbados","BBD"],["Belarus","BYN"],["Belgium","EUR"],["Belize","BZD"],["Benin","XOF"],["Bermuda","BMD"],["Bhutan","BTN"],["Bolivia","BOB"],["Bosnia and Herzegovina","BAM"],["Botswana","BWP"],["Brazil","BRL"],["British Indian Ocean Territory","USD"],["British Virgin Islands","USD"],["Brunei","BND"],["Bulgaria","BGN"],["Burkina Faso","XOF"],["Burundi","BIF"],["Cambodia","KHR"],["Cameroon","XAF"],["Canada","CAD"],["Cape Verde","CVE"],["Caribbean Netherlands","USD"],["Cayman Islands","KYD"],["Central African Republic","XAF"],["Chad","XAF"],["Chile","CLP"],["China","CNY"],["Christmas Island","AUD"],["Cocos (Keeling) Islands","AUD"],["Colombia","COP"],["Comoros","KMF"],["Cook Islands","CKD"],["Costa Rica","CRC"],["Croatia","EUR"],["Cuba","CUC"],["Curaçao","ANG"],["Cyprus","EUR"],["Czechia","CZK"],["Denmark","DKK"],["Djibouti","DJF"],["Dominica","XCD"],["Dominican Republic","DOP"],["DR Congo","CDF"],["Ecuador","USD"],["Egypt","EGP"],["El Salvador","USD"],["Equatorial Guinea","XAF"],["Eritrea","ERN"],["Estonia","EUR"],["Eswatini","SZL"],["Ethiopia","ETB"],["Falkland Islands","FKP"],["Faroe Islands","DKK"],["Fiji","FJD"],["Finland","EUR"],["France","EUR"],["French Guiana","EUR"],["French Polynesia","XPF"],["French Southern and Antarctic Lands","EUR"],["Gabon","XAF"],["Gambia","GMD"],["Georgia","GEL"],["Germany","EUR"],["Ghana","GHS"],["Gibraltar","GIP"],["Greece","EUR"],["Greenland","DKK"],["Grenada","XCD"],["Guadeloupe","EUR"],["Guam","USD"],["Guatemala","GTQ"],["Guernsey","GBP"],["Guinea","GNF"],["Guinea-Bissau","XOF"],["Guyana","GYD"],["Haiti","HTG"],["Honduras","HNL"],["Hong Kong","HKD"],["Hungary","HUF"],["Iceland","ISK"],["India","INR"],["Indonesia","IDR"],["Iran","IRR"],["Iraq","IQD"],["Ireland","EUR"],["Isle of Man","GBP"],["Israel","ILS"],["Italy","EUR"],["Ivory Coast","XOF"],["Jamaica","JMD"],["Japan","JPY"],["Jersey","GBP"],["Jordan","JOD"],["Kazakhstan","KZT"],["Kenya","KES"],["Kiribati","AUD"],["Kosovo","EUR"],["Kuwait","KWD"],["Kyrgyzstan","KGS"],["Laos","LAK"],["Latvia","EUR"],["Lebanon","LBP"],["Lesotho","LSL"],["Liberia","LRD"],["Libya","LYD"],["Liechtenstein","CHF"],["Lithuania","EUR"],["Luxembourg","EUR"],["Macau","MOP"],["Madagascar","MGA"],["Malawi","MWK"],["Malaysia","MYR"],["Maldives","MVR"],["Mali","XOF"],["Malta","EUR"],["Marshall Islands","USD"],["Martinique","EUR"],["Mauritania","MRU"],["Mauritius","MUR"],["Mayotte","EUR"],["Mexico","MXN"],["Micronesia","USD"],["Moldova","MDL"],["Monaco","EUR"],["Mongolia","MNT"],["Montenegro","EUR"],["Montserrat","XCD"],["Morocco","MAD"],["Mozambique","MZN"],["Myanmar","MMK"],["Namibia","NAD"],["Nauru","AUD"],["Nepal","NPR"],["Netherlands","EUR"],["New Caledonia","XPF"],["New Zealand","NZD"],["Nicaragua","NIO"],["Niger","XOF"],["Nigeria","NGN"],["Niue","NZD"],["Norfolk Island","AUD"],["North Korea","KPW"],["North Macedonia","MKD"],["Northern Mariana Islands","USD"],["Norway","NOK"],["Oman","OMR"],["Pakistan","PKR"],["Palau","USD"],["Palestine","EGP"],["Panama","PAB"],["Papua New Guinea","PGK"],["Paraguay","PYG"],["Peru","PEN"],["Philippines","PHP"],["Pitcairn Islands","NZD"],["Poland","PLN"],["Portugal","EUR"],["Puerto Rico","USD"],["Qatar","QAR"],["Réunion","EUR"],["Republic of the Congo","XAF"],["Romania","RON"],["Russia","RUB"],["Rwanda","RWF"],["São Tomé and Príncipe","STN"],["Saint Barthélemy","EUR"],["Saint Helena, Ascension and Tristan da Cunha","GBP"],["Saint Kitts and Nevis","XCD"],["Saint Lucia","XCD"],["Saint Martin","EUR"],["Saint Pierre and Miquelon","EUR"],["Saint Vincent and the Grenadines","XCD"],["Samoa","WST"],["San Marino","EUR"],["Saudi Arabia","SAR"],["Senegal","XOF"],["Serbia","RSD"],["Seychelles","SCR"],["Sierra Leone","SLE"],["Singapore","SGD"],["Sint Maarten","ANG"],["Slovakia","EUR"],["Slovenia","EUR"],["Solomon Islands","SBD"],["Somalia","SOS"],["South Africa","ZAR"],["South Georgia","GBP"],["South Korea","KRW"],["South Sudan","SSP"],["Spain","EUR"],["Sri Lanka","LKR"],["Sudan","SDG"],["Suriname","SRD"],["Svalbard and Jan Mayen","NOK"],["Sweden","SEK"],["Switzerland","CHF"],["Syria","SYP"],["Taiwan","TWD"],["Tajikistan","TJS"],["Tanzania","TZS"],["Thailand","THB"],["Timor-Leste","USD"],["Togo","XOF"],["Tokelau","NZD"],["Tonga","TOP"],["Trinidad and Tobago","TTD"],["Tunisia","TND"],["Turkey","TRY"],["Turkmenistan","TMT"],["Turks and Caicos Islands","USD"],["Tuvalu","AUD"],["Uganda","UGX"],["Ukraine","UAH"],["United Arab Emirates","AED"],["United Kingdom","GBP"],["United States","USD"],["United States Minor Outlying Islands","USD"],["United States Virgin Islands","USD"],["Uruguay","UYU"],["Uzbekistan","UZS"],["Vanuatu","VUV"],["Vatican City","EUR"],["Venezuela","VES"],["Vietnam","VND"],["Wallis and Futuna","XPF"],["Western Sahara","DZD"],["Yemen","YER"],["Zambia","ZMW"],["Zimbabwe","ZWL"]];
+
+    const fallbackRatesFromCAD = {
+      CAD: 1, USD: .73, EUR: .67, GBP: .57, AED: 2.68, SAR: 2.75, PHP: 43.559,
+      AUD: 1.1, NZD: 1.2, INR: 62, PKR: 204, BDT: 86, LKR: 220, SGD: .98, MYR: 3.12,
+      IDR: 11900, THB: 24.6, JPY: 107, KRW: 1000, CNY: 5.27, HKD: 5.7, QAR: 2.66,
+      KWD: .224, BHD: .275, OMR: .281, ZAR: 13.4, EGP: 36, NGN: 1100, KES: 94,
+      CHF: .6, SEK: 7, NOK: 7.1, DKK: 5, PLN: 2.85, CZK: 16.6, HUF: 265, RON: 3.35,
+      TRY: 31, BRL: 4, MXN: 13, ARS: 800
+    };
+
+    const state = {
+      mode: "single",
+      rate: 43.559,
+      rateDate: "",
+      rateSource: "template fallback",
+      countries: fallbackCountries
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const fields = ["clientName", "programType", "destinationCountry", "spouseCount", "childCount",
+      "principalFee", "spouseFee", "childFee", "vatMode", "vatRate", "baseCurrency", "targetCurrency", "manualRate"];
+    const programNames = {
+      career: "Career Development Program",
+      student: "International Student Program",
+      pr: "Permanent Residency Program",
+      tourist: "Tourist Program"
+    };
+
+    function currencyName(code) {
+      try {
+        return new Intl.DisplayNames(["en"], { type: "currency" }).of(code) || code;
+      } catch {
+        return code;
+      }
+    }
+
+    function availableCurrencies() {
+      const set = new Set(state.countries.map(([, currency]) => currency));
+      Object.keys(fallbackRatesFromCAD).forEach(code => set.add(code));
+      return [...set].sort();
+    }
+
+    function populateCurrencyMenus() {
+      const currentBase = $("baseCurrency").value || "CAD";
+      const currentTarget = $("targetCurrency").value || "PHP";
+      const options = availableCurrencies().map(code =>
+        `<option value="${code}">${code} · ${currencyName(code)}</option>`).join("");
+      $("baseCurrency").innerHTML = options;
+      $("targetCurrency").innerHTML = options;
+      $("baseCurrency").value = availableCurrencies().includes(currentBase) ? currentBase : "CAD";
+      $("targetCurrency").value = availableCurrencies().includes(currentTarget) ? currentTarget : "PHP";
+    }
+
+    function populateCountries(selected = "Canada") {
+      state.countries.sort((a, b) => a[0].localeCompare(b[0]));
+      $("destinationCountry").innerHTML = state.countries.map(([name, currency]) =>
+        `<option value="${name}" data-currency="${currency}">${name} · ${currency}</option>`).join("");
+      $("destinationCountry").value = state.countries.some(([name]) => name === selected) ? selected : state.countries[0][0];
+    }
+
+    async function loadCountries() {
+      try {
+        const response = await fetch("https://restcountries.com/v3.1/all?fields=name,currencies");
+        if (!response.ok) throw new Error("Country service unavailable");
+        const data = await response.json();
+        const countries = [];
+        data.forEach(country => {
+          const codes = Object.keys(country.currencies || {});
+          if (country.name?.common && codes[0]) countries.push([country.name.common, codes[0]]);
+        });
+        if (countries.length > 150) {
+          const selected = $("destinationCountry").value || "Canada";
+          state.countries = countries;
+          populateCountries(selected);
+          populateCurrencyMenus();
+          render();
+        }
+      } catch {
+        // The built-in list keeps the calculator usable offline.
+      }
+    }
+
+    function selectedCountryCurrency() {
+      return $("destinationCountry").selectedOptions[0]?.dataset.currency || "CAD";
+    }
+
+    async function updateRate() {
+      const base = $("baseCurrency").value;
+      const target = $("targetCurrency").value;
+      $("rateValue").textContent = "Loading rate…";
+      $("rateStatus").textContent = "Requesting the latest available market reference rate.";
+      if (base === target) {
+        state.rate = 1;
+        state.rateDate = new Date().toISOString().slice(0, 10);
+        state.rateSource = "same currency";
+        render();
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://open.er-api.com/v6/latest/${encodeURIComponent(base)}`);
+        if (!response.ok) throw new Error("Rate service unavailable");
+        const data = await response.json();
+        const rate = Number(data.rates?.[target]);
+        if (!Number.isFinite(rate) || rate <= 0) throw new Error("Currency pair unavailable");
+        state.rate = rate;
+        state.rateDate = data.time_last_update_utc ? new Date(data.time_last_update_utc).toISOString().slice(0, 10) : "";
+        state.rateSource = "live reference rate";
+      } catch {
+        const baseToCad = base === "CAD" ? 1 : 1 / (fallbackRatesFromCAD[base] || 1);
+        state.rate = baseToCad * (fallbackRatesFromCAD[target] || 1);
+        state.rateDate = "";
+        state.rateSource = "offline indicative fallback";
+      }
+      render();
+    }
+
+    function activeRate() {
+      const manual = Number($("manualRate").value);
+      return manual > 0 ? manual : state.rate;
+    }
+
+    function money(value, currency) {
+      try {
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency,
+          maximumFractionDigits: 2
+        }).format(value);
+      } catch {
+        return `${currency} ${value.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+      }
+    }
+
+    function numberValue(id) {
+      return Math.max(0, Number($(id).value) || 0);
+    }
+
+    function applicants() {
+      const rows = [{ label: "Principal Applicant (Adult)", amount: numberValue("principalFee") }];
+      if (state.mode === "family") {
+        const spouses = numberValue("spouseCount");
+        const children = numberValue("childCount");
+        for (let i = 1; i <= spouses; i++) rows.push({
+          label: spouses === 1 ? "Spouse / Secondary Adult" : `Secondary Adult ${i}`,
+          amount: numberValue("spouseFee")
+        });
+        for (let i = 1; i <= children; i++) rows.push({
+          label: `Dependent Child ${i}`,
+          amount: numberValue("childFee")
+        });
+      }
+      return rows;
+    }
+
+    function payments(total, familyExtra) {
+      const principal = numberValue("principalFee");
+      if (state.mode === "family" && familyExtra > 0) {
+        const first = principal * .5;
+        const second = familyExtra * .5;
+        const remaining = total - first - second;
+        const third = remaining * .5;
+        return [
+          ["Initial Down Payment · main applicant · contract signing", "Services 1 & 2", first],
+          ["Initial Down Payment · spouse/dependents", "Services 1 & 2", second],
+          ["Second Payment · during processing", "Services 3 & 4", third],
+          ["Final Payment · upon visa approval", "Final balance", total - first - second - third]
+        ];
+      }
+      const first = total * .5;
+      const second = total * .25;
+      return [
+        ["Initial Down Payment (50%) · contract signing", "Services 1 & 2", first],
+        ["Second Payment (25%) · during processing", "Services 3 & 4", second],
+        ["Final Payment (25%) · upon visa approval", "Final balance", total - first - second]
+      ];
+    }
+
+    function render() {
+      const base = $("baseCurrency").value || "CAD";
+      const target = $("targetCurrency").value || "PHP";
+      const rate = activeRate();
+      const rows = applicants();
+      const total = rows.reduce((sum, row) => sum + row.amount, 0);
+      const familyExtra = total - numberValue("principalFee");
+      const schedule = payments(total, familyExtra);
+      const manual = numberValue("manualRate") > 0;
+      const programName = programNames[$("programType").value] || programNames.career;
+      const vatEnabled = $("vatMode").value === "on";
+      const vatRate = numberValue("vatRate");
+      const vatAmount = vatEnabled ? total * vatRate / 100 : 0;
+      const grandTotal = total + vatAmount;
+
+      $("familyOptions").classList.toggle("hidden", state.mode !== "family");
+      $("dependentFeeFields").classList.toggle("hidden", state.mode !== "family");
+      document.querySelectorAll(".segment").forEach(button =>
+        button.classList.toggle("active", button.dataset.mode === state.mode));
+
+      $("heroProgram").textContent = programName;
+      $("reportTitle").textContent = `ECC ${programName.toUpperCase()} | PAYMENT BREAKDOWN`;
+      $("reportFooter").textContent = `ECC ${programName} | Confidential & Proprietary`;
+      $("metaClient").textContent = $("clientName").value.trim() || "Prospective Client";
+      $("metaMode").textContent = state.mode === "family"
+        ? `${rows.length} family applicant${rows.length === 1 ? "" : "s"}`
+        : "Single applicant";
+      $("metaCountry").textContent = $("destinationCountry").value || "Canada";
+
+      $("baseApplicantHeader").textContent = `Amount (${base})`;
+      $("targetApplicantHeader").textContent = `Amount (${target})`;
+      $("basePaymentHeader").textContent = `Amount (${base})`;
+      $("targetPaymentHeader").textContent = `Amount (${target})`;
+
+      $("applicantRows").innerHTML = rows.map((row, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${row.label}</td>
+          <td class="number">${money(row.amount, base)}</td>
+          <td class="number">${money(row.amount * rate, target)}</td>
+        </tr>`).join("");
+
+      $("applicantSubtotalLabel").textContent = vatEnabled ? "SUBTOTAL APPLICANTS" : "TOTAL APPLICANTS";
+      $("applicantBaseTotal").textContent = money(total, base);
+      $("applicantTargetTotal").textContent = money(total * rate, target);
+      $("applicantVatRow").classList.toggle("hidden", !vatEnabled);
+      $("applicantGrandTotalRow").classList.toggle("hidden", !vatEnabled);
+      $("applicantVatLabel").textContent = `VAT (${vatRate.toLocaleString("en-US", { maximumFractionDigits: 2 })}%)`;
+      $("applicantBaseVat").textContent = money(vatAmount, base);
+      $("applicantTargetVat").textContent = money(vatAmount * rate, target);
+      $("applicantBaseGrandTotal").textContent = money(grandTotal, base);
+      $("applicantTargetGrandTotal").textContent = money(grandTotal * rate, target);
+
+      const paymentBody = schedule.map(row => `
+        <tr>
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td class="number">${money(row[2], base)}</td>
+          <td class="number">${money(row[2] * rate, target)}</td>
+        </tr>`).join("");
+      const vatPaymentRow = vatEnabled ? `
+        <tr>
+          <td>VAT (${vatRate.toLocaleString("en-US", { maximumFractionDigits: 2 })}%)</td>
+          <td>Tax amount</td>
+          <td class="number">${money(vatAmount, base)}</td>
+          <td class="number">${money(vatAmount * rate, target)}</td>
+        </tr>` : "";
+      $("paymentRows").innerHTML = paymentBody + vatPaymentRow;
+
+      $("paymentTotalLabel").textContent = vatEnabled ? "TOTAL INCLUDING VAT" : "TOTAL";
+      $("paymentBaseTotal").textContent = money(grandTotal, base);
+      $("paymentTargetTotal").textContent = money(grandTotal * rate, target);
+
+      $("rateValue").textContent = `1 ${base} = ${rate.toLocaleString("en-US", { maximumFractionDigits: 6 })} ${target}`;
+      $("rateStatus").textContent = manual
+        ? "Manual conversion rate is active."
+        : `${state.rateSource}${state.rateDate ? ` · updated ${state.rateDate}` : ""}.`;
+      $("conversionNote").textContent =
+        `* ${target} conversion is based on 1 ${base} = ${rate.toLocaleString("en-US", { maximumFractionDigits: 6 })} ${target}. ` +
+        `VAT is ${vatEnabled ? `included at ${vatRate.toLocaleString("en-US", { maximumFractionDigits: 2 })}%` : "not applied"}. ` +
+        "This is an indicative reference rate and may change. Final amounts should be confirmed before issuing a contract or invoice.";
+    }
+
+    function reset() {
+      state.mode = "single";
+      $("clientName").value = "";
+      $("programType").value = "career";
+      $("destinationCountry").value = "Canada";
+      $("spouseCount").value = "0";
+      $("childCount").value = "0";
+      $("principalFee").value = "9500";
+      $("spouseFee").value = "4750";
+      $("childFee").value = "1000";
+      $("vatMode").value = "off";
+      $("vatRate").value = "5";
+      $("baseCurrency").value = "CAD";
+      $("targetCurrency").value = "PHP";
+      $("manualRate").value = "";
+      updateRate();
+    }
+
+    document.querySelectorAll(".segment").forEach(button => {
+      button.addEventListener("click", () => {
+        state.mode = button.dataset.mode;
+        if (state.mode === "family" && $("spouseCount").value === "0" && $("childCount").value === "0") {
+          $("spouseCount").value = "1";
+          $("childCount").value = "1";
+        }
+        render();
+      });
+    });
+
+    fields.forEach(id => $(id).addEventListener("input", render));
+    $("destinationCountry").addEventListener("change", () => {
+      const currency = selectedCountryCurrency();
+      if (availableCurrencies().includes(currency)) $("targetCurrency").value = currency;
+      updateRate();
+    });
+    $("baseCurrency").addEventListener("change", updateRate);
+    $("targetCurrency").addEventListener("change", updateRate);
+    $("refreshRate").addEventListener("click", updateRate);
+    $("resetButton").addEventListener("click", reset);
+    $("printButton").addEventListener("click", () => window.print());
+
+    populateCountries();
+    populateCurrencyMenus();
+    render();
+    updateRate();
+    loadCountries();
+  </script>
+</body>
+</html>
